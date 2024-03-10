@@ -1,0 +1,242 @@
+---
+title: "My title"
+subtitle: "My subtitle if needed"
+author: 
+  - First author
+  - Another author
+thanks: "Code and data are available at: LINK."
+date: today
+date-format: long
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+cleaned_data<-read_csv(file=here("data/analysis_data/analysis_data.csv"))
+
+```
+
+
+# Introduction
+
+
+# Data {#sec-data}
+
+
+
+```{r}
+#| label: fig-year
+#| fig-cap: Average Working Hours per Year per Week
+#| echo: false
+
+hrs_by_years<-
+  group_by(cleaned_data, year)|>
+  summarize(mean=mean(hrs))
+
+ggplot(hrs_by_years,aes(x=year,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "Year",
+       y = "Average Working Hours")
+```
+
+
+
+```{r}
+#| label: fig-class
+#| fig-cap: Average Working Hours per Class per Week
+#| echo: false
+#| warning: false
+#| message: false
+
+hrs_by_class <-
+  cleaned_data |>
+  filter(is.na(cleaned_data$class)==FALSE&cleaned_data$class!=5) |>
+  group_by(class)|>
+  summarize(mean=mean(hrs)) |>
+  mutate(class_str=as.character(class))
+
+hrs_by_class$class_str[hrs_by_class$class_str == '1'] <- 'Lower class'
+hrs_by_class$class_str[hrs_by_class$class_str == '2'] <- 'Working class'
+hrs_by_class$class_str[hrs_by_class$class_str == '3'] <- 'Middle class'
+hrs_by_class$class_str[hrs_by_class$class_str == '4'] <- 'Upper class'
+
+ggplot(hrs_by_class, aes(x = factor(class_str,level = c('Lower class','Working class','Middle class','Upper class')), y = mean, fill = class_str)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Average Working Hours per Class", x = "Class", y = "Average Working Hours", fill ="Class")
+```
+
+
+
+```{r}
+#| label: fig-age
+#| fig-cap: Average Working Hours per Age per Week
+#| echo: false
+#| warning: false
+#| message: false
+hrs_by_age<-
+  group_by(cleaned_data, age)|>
+  summarize(mean=mean(hrs))
+
+ggplot(hrs_by_age,aes(x=age,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(title = "Average Working Hours per Age",
+       x = "age",
+       y = "Average Working Hours")
+
+```
+
+
+这个烂
+```{r}
+#| label: fig-minors
+#| fig-cap: Average Working Hours per Number of Minors
+#| echo: false
+#| warning: false
+#| message: false
+hrs_by_num_of_minors <-
+  cleaned_data |>
+  mutate(minors = babies + preteen + teens)|>
+  group_by(minors)|>
+  summarize(mean = mean(hrs))
+
+ggplot(hrs_by_num_of_minors,aes(x=minors,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "age",
+       y = "Average Working Hours")
+
+```
+
+
+
+```{r}
+#| label: fig-ratio
+#| fig-cap: Average Working Hours per Ratio
+#| echo: false
+#| warning: false
+#| message: false
+hrs_by_ratio <-
+  cleaned_data |>
+  mutate(ratio = (babies + preteen + teens + adults)/earnrs) |>
+  group_by(ratio) |>
+  summarize(mean = mean(hrs))
+
+ggplot(hrs_by_ratio,aes(x=ratio,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "Ratio of family members and earners",
+       y = "Average Working Hours")
+```
+
+
+
+```{r}
+#| label: fig-satjob
+#| fig-cap: Work Satifsaction and Average Working Hours
+#| echo: false
+#| warning: false
+#| message: false
+hrs_by_satjob<-
+  group_by(cleaned_data, satjob )|>
+  summarize(mean=mean(hrs))
+
+ggplot(hrs_by_satjob,aes(x=satjob ,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "Work Satifsaction",
+       y = "Average Working Hours")
+
+```
+
+
+
+```{r}
+#| label: fig-satjob_by_hrs
+#| fig-cap: Working Hours and Average Work Satifsaction
+#| echo: false
+#| warning: false
+#| message: false
+satjob_by_hrs<-
+  cleaned_data |>
+  filter(is.na(cleaned_data$satjob)==FALSE)|>
+  group_by(hrs )|>
+  summarize(mean=mean(satjob))
+
+ggplot(satjob_by_hrs,aes(x=hrs,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "Working Hours",
+       y = "Average Work Satifsaction") +
+  expand_limits(y=0)
+```
+
+
+```{r}
+#| label: fig-satfin
+#| fig-cap: Financial Satifsaction and Average Working Hours
+#| echo: false
+#| warning: false
+#| message: false
+hrs_by_satfin<-
+  group_by(cleaned_data, satfin )|>
+  summarize(mean=mean(hrs))
+
+ggplot(hrs_by_satfin,aes(x=satfin ,y=mean))+
+  geom_line() +
+  geom_point() +
+  theme_minimal() + 
+  labs(x = "Financial Satifsaction",
+       y = "Average Working Hours")
+```
+# Results
+
+
+
+
+# Discussion
+
+## First discussion point {#sec-first-point}
+
+If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
+## Second discussion point
+
+## Third discussion point
+
+## Weaknesses and next steps
+
+Weaknesses and next steps should also be included.
+
+\newpage
+
+\appendix
+
+# Appendix {-}
+
+
+
+
+
+\newpage
+
+
+# References
+
+
