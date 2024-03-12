@@ -33,3 +33,4 @@ sum(!(unique(cleaned_data$class) %in%
 #age
 class(cleaned_data$age) == "integer"
 
+
