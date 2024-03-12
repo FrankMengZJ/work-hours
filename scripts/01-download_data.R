@@ -1,32 +1,30 @@
 #### Preamble ####
 # Purpose: Downloads and saves data from US General Social Survey
-# Author: Michaela Drouillard & Christina Wei
-# Data: 21 February 2023
-# Contact: michaela.drouillard@mail.utoronto.ca & christina.wei@mail.utoronto.ca
+# Author: Zijun Meng
+# Date: 11 March 2024 
+# Contact: zijun.meng@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: None
-# Data source: https://gss.norc.org/
+
 
 
 #### Workspace setup ####
 library(tidyverse)
-library(haven) # for reading DTA files
+library(haven)
 
 #### Download data ####
 
-# Download & unzip all the GSS data across the years
+
 zip_file <- "inputs/data/large_files/GSS_stata.zip"
 
 download.file("https://gss.norc.org/Documents/stata/GSS_stata.zip", zip_file)
 unzip(zip_file, exdir = "inputs/data/large_files")
 
-# read dta data and write to csv
+
 raw_gss_data <- read_dta("inputs/data/large_files/GSS_stata/gss7222_r2.dta")
 
-raw_gss_data
-## Filter and save data related to respondent info and survey questions
+
 select(raw_gss_data,class)
-# Respondent information
+
 
 raw_data <-
   raw_gss_data |>

@@ -1,19 +1,28 @@
 #### Preamble ####
-# Purpose: Simulates... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Simulates average working hours and age
+# Author: Zijun Meng
+# Date: 11 March 2024 
+# Contact: zijun.meng@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
+
 
 #### Simulate data ####
-# [...ADD CODE HERE...]
-
-
-
+set.seed(1453)
+simulated_data <-
+  tibble(
+    year = sample(1972:2022,100,replace = T),
+    age = sample(18:80,100, replace=T) ,
+    hrs = sample(1:70,100, replace=T) 
+  )
+simulated_data
+#test
+simulated_data$year |> min() >= 1972
+simulated_data$year |> max() <= 2022
+simulated_data$age |> min() >= 18
+simulated_data$age |> max() <= 80
+simulated_data$hrs |> min() >= 1
+simulated_data$hrs |> max() <= 70

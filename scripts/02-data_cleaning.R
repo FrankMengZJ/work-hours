@@ -1,11 +1,9 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw data, removed those who did not work
+# Author: Zijun Meng
+# Date: 11 March 2024 
+# Contact: zijun.meng@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 #### Workspace setup ####
 library(tidyverse)
@@ -35,5 +33,7 @@ cleaned_data <-
   filter(earnrs>0) |>
   subset(select = -c(hrs1,hrs2,sphrs1,sphrs2))
 cleaned_data
+
+
 #### Save data ####
 write_csv(cleaned_data, "data/analysis_data/analysis_data.csv")
