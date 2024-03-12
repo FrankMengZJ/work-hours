@@ -1,13 +1,13 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
+title: "The Dynamics of Work Hours and Work-Life Balance: Insights from the General Social Survey"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Qin He
+  - Shuyuan Zheng
+  - Zijun Meng
+thanks: "Code and data are available at: https://github.com/FrankMengZJ/work-hours"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper examines the relationship between work hours and life quality using data from the US General Social Survey. Findings indicate that higher work satisfaction and financial comfort are associated with fewer work hours, highlighting inequalities based on social class. These insights underscore the importance of considering work hours in efforts to improve overall life satisfaction and work-life balance."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -20,21 +20,64 @@ bibliography: references.bib
 
 library(tidyverse)
 library(here)
+library(knitr)
+library(kableExtra)
+
 cleaned_data<-read_csv(file=here("data/analysis_data/analysis_data.csv"))
 
 ```
 
 
 # Introduction
+Work hours, as a central facet of our daily routines, have profound implications for our well-being and life satisfaction. The quest for an optimal work-life balance (WLB) has become more pressing in recent years, amid reports of increasing work hours and their consequent impact on individuals' quality of life worldwide. The concept of WLB, however, is multifaceted and varies in its operational definition across different studies, reflecting the complexity of balancing professional obligations with personal life in a way that promotes individual growth and well-being.
 
+@WLB conceptualize WLB as “The individual’s perception that work and non-work activities are compatible and promote growth in accordance with an individual’s current life priorities,” highlighting the subjective nature of achieving balance based on personal priorities and life stages. Similarly, the Canadian Department of Labor's perspective, as cited in @WFP, defines WLB more expansively as “a self-defined, self-determined state of well-being that a person can reach, or can set as a goal, that allows them to manage effectively multiple responsibilities at work, at home, and in their community; it supports physical, emotional, family, and community health, and does so without grief, stress or negative impact.” These definitions underscore the personalized and dynamic nature of work-life balance, suggesting that achieving it involves managing various dimensions of life in a harmonious manner that minimizes stress and maximizes well-being.
+Drawing from the rich data provided by the US General Social Survey (GSS) conducted by @data, this paper seeks to explore the intricate relationships between work hours and various factors, including financial satisfaction, personal well-being, social class perceptions, and demographic characteristics. The GSS dataset, renowned for its comprehensive coverage of the American population's attitudes and behaviors, offers a unique lens through which we can assess these dynamics over time.
 
+The paper is structured as follows: The Data section details the sources, limitations, and preprocessing of the GSS dataset. The Results section presents our findings, showcasing the relationships between work hours and various factors across different demographic groups.
 # Data {#sec-data}
+Data used in this paper are retrieved from the US General Social Survey (GSS) from NORC at @data. We retrieved demographic data as well as survey questions related to work hours from 1972 to 2022.
+
+##Source Data {#sec-sourcedata}
+Source Data For demographic factors and questions related to work hours, we retrieved the following data as described in @tbl-data
+```{r}
+#| label: tbl-data
+#| tbl-cap: "Data Retrived"
+#| echo: false
 
 
+data <- data.frame(
+  Variable = c("age", "cohort", "sexbirth1", "marital", "degree", "income16", "satfin", "finalter", "finrela", "class", "class1"),
+  Description = c("Respondent's age", "Birth cohort of respondent", "sex recorded at birth", "Respondent's marital status", "Respondent's degree", "family income recorded in 2016", "Respondent's satisfaction with their current financial situation", "Changes in respondent's financial situation", "Comparing respondent’s family income with American families in general", "self identified social class the respondent belong in", "self identified social class the respondent belong in (more granular than social_class)"),
+  Example = c("56", "1965", "Female", "Divorced", "Bachelors", "$50,000 TO $59,999", "Pretty Well Satisfied", "Stayed the same", "Above Average", "Middle Class", "Upper Middle Class")
+)
+
+# Create the table using kable and kableExtra for HTML output
+kable(data)
+```
+##Data Limitations {#sec-datalimitations}
+###Non-response Error{#sec-nre}
+The transition to web surveys in 2021 resulted in a lower response rate (17%) compared to the traditionally higher rates achieved through in-person surveys. Although this rate is high for web surveys, it marks a significant departure from past GSS methodologies. Differential participation rates across years could influence the representativeness of the survey data. While efforts to adjust for these differences using post-stratification weighting are made, the potential for non-response bias impacting trend comparisons remains a concern.
+
+###Remote Work {#sec-rw}
+For remote work during the COVID-19 period, the shift to remote work can significantly affect the true total working hours reported. Without the clear boundaries that separate work from personal time in an office setting, remote employees might work longer hours, either by starting earlier, finishing later, or working intermittently across the day.
+
+The transition to remote work has also introduced challenges in accurately reporting work hours. Employees working from home may have their work hours categorized as "NA" (not available) due to inconsistencies in self-reporting.
+
+##Data Cleaning{#sec-dc}
+Data was cleaned and analyzed using the open source statistically programming language @R, using functionalities from @tidyverse, and @haven.
+
+The dataset was filtered to select key variables of interest, such as working hours, respondent demographics, and survey responses. This step involved selecting specific columns from the raw GSS data, including year, identification variables, work hours, age, educational attainment, marital status, number of children in different age groups, work status, income, and measures of subjective well-being among others.
+
+Missing values for work hours (hrs1, hrs2) and spouse's work hours (sphrs1, sphrs2) were set to 0, indicating no reported hours. Similar treatment was applied to variables indicating the number of children in different age groups and the number of earners in the household. New variables were created to represent total work hours (hrs) and spouse's total work hours (sphrs) by summing the respective variables. Records with no reported work hours or earners were filtered out to focus on employed respondents. 
+
+
+#Results
+@fig-year shows the fluctuating average working hours per week from 1980 to beyond 2020, with notable peaks suggesting periods of increased work hours and a recent sharp decline, possibly indicating economic or policy changes.
 
 ```{r}
 #| label: fig-year
-#| fig-cap: Average Working Hours per Year per Week
+#| fig-cap: Average Working Hours per Year
 #| echo: false
 
 hrs_by_years<-
@@ -46,14 +89,15 @@ ggplot(hrs_by_years,aes(x=year,y=mean))+
   geom_point() +
   theme_minimal() + 
   labs(x = "Year",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 ```
 
+@fig-class displays the average working hours per week by social class,, the lower class works the most hours, and the upper class works the least, indicating a socioeconomic disparity in work hours.
 
 
 ```{r}
 #| label: fig-class
-#| fig-cap: Average Working Hours per Class per Week
+#| fig-cap: Average Working Hours per Class
 #| echo: false
 #| warning: false
 #| message: false
@@ -73,9 +117,10 @@ hrs_by_class$class_str[hrs_by_class$class_str == '4'] <- 'Upper class'
 ggplot(hrs_by_class, aes(x = factor(class_str,level = c('Lower class','Working class','Middle class','Upper class')), y = mean, fill = class_str)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
-  labs(title = "Average Working Hours per Class", x = "Class", y = "Average Working Hours", fill ="Class")
+  labs(title = "Average Working Hours per Class", x = "Class", y = "Average Working Hours per Week", fill ="Class")
 ```
 
+@fig-age and @fig-minors displayed average working hours across different age groups. @fig-age presents a typical lifecycle pattern of average working hours per week in relation to age, showing an increase through early adulthood to middle age, then a decline as individuals pass the age of 60, likely due to retirement. 
 
 
 ```{r}
@@ -94,12 +139,12 @@ ggplot(hrs_by_age,aes(x=age,y=mean))+
   theme_minimal() + 
   labs(title = "Average Working Hours per Age",
        x = "age",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 
 ```
 
 
-这个烂
+
 ```{r}
 #| label: fig-minors
 #| fig-cap: Average Working Hours per Number of Minors
@@ -117,11 +162,14 @@ ggplot(hrs_by_num_of_minors,aes(x=minors,y=mean))+
   geom_point() +
   theme_minimal() + 
   labs(x = "age",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 
 ```
 
 
+@fig-ratio reveals a high degree of variability in working hours when the ratio of family members to earners is low, suggesting that in households where the number of earners is relatively high compared to family members, the working hours are inconsistent. This could be due to different work patterns or job types among earners.
+
+As the ratio increases, which implies fewer earners compared to family members, the average working hours per week seem to decrease and stabilize. Interestingly, after the ratio surpasses 5, there is a significant drop in variability and a general downward trend in average working hours. This suggests that in households with a higher number of dependents per earner, the average working hours are lower and more consistent, possibly due to the constraints of balancing work and caregiving responsibilities.
 
 ```{r}
 #| label: fig-ratio
@@ -140,9 +188,10 @@ ggplot(hrs_by_ratio,aes(x=ratio,y=mean))+
   geom_point() +
   theme_minimal() + 
   labs(x = "Ratio of family members and earners",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 ```
 
+@fig-satjob illustrates a clear downward trend in average working hours as work satisfaction increases, suggesting a potential relationship between these two variables. This indicates that employees with higher work satisfaction tend to have fewer average working hours, which could be interpreted as a sign that better work-life balance leads to higher job satisfaction, or that happier employees are more efficient and thus need less time to complete their work. However, it’s crucial to note that correlation does not equal causation, and further analysis would be required to understand the underlying reasons for this relationship.
 
 
 ```{r}
@@ -160,10 +209,11 @@ ggplot(hrs_by_satjob,aes(x=satjob ,y=mean))+
   geom_point() +
   theme_minimal() + 
   labs(x = "Work Satifsaction",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 
 ```
 
+In @fig-satjob_by_hrs, the distribution of points indicates that for the majority of the working hours, average work satisfaction remains relatively stable, hovering around the 1.5 mark. There's no clear trend or correlation observable for most of the data range; however, there is a noticeable spike in work satisfaction at the highest end of the working hours spectrum. This could represent an anomaly or a specific situation where individuals working exceptionally long hours are reporting higher satisfaction, possibly due to high compensation, passion for their work, or other job-related benefits.
 
 
 ```{r}
@@ -182,11 +232,12 @@ ggplot(satjob_by_hrs,aes(x=hrs,y=mean))+
   geom_line() +
   geom_point() +
   theme_minimal() + 
-  labs(x = "Working Hours",
+  labs(x = "Working Hours per Week",
        y = "Average Work Satifsaction") +
   expand_limits(y=0)
 ```
 
+In @fig-satfin, it exhibits a downward slope, indicating that as financial satisfaction increases, the average working hours decrease. This could suggest that individuals who are more financially satisfied may be working fewer hours, perhaps due to higher wages or the ability to achieve a comfortable living without needing to work longer hours. Conversely, those with lower financial satisfaction may be working more hours, potentially due to lower wages requiring more work to meet financial needs.
 
 ```{r}
 #| label: fig-satfin
@@ -203,9 +254,9 @@ ggplot(hrs_by_satfin,aes(x=satfin ,y=mean))+
   geom_point() +
   theme_minimal() + 
   labs(x = "Financial Satifsaction",
-       y = "Average Working Hours")
+       y = "Average Working Hours per Week")
 ```
-# Results
+
 
 
 
@@ -214,7 +265,7 @@ ggplot(hrs_by_satfin,aes(x=satfin ,y=mean))+
 
 ## First discussion point {#sec-first-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
 
 ## Second discussion point
 
@@ -222,7 +273,7 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+
 
 \newpage
 
