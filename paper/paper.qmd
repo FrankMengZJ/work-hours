@@ -31,14 +31,15 @@ cleaned_data<-read_csv(file=here("data/analysis_data/analysis_data.csv"))
 # Introduction
 Work hours, as a central facet of our daily routines, have profound implications for our well-being and life satisfaction. The quest for an optimal work-life balance (WLB) has become more pressing in recent years, amid reports of increasing work hours and their consequent impact on individuals' quality of life worldwide. The concept of WLB, however, is multifaceted and varies in its operational definition across different studies, reflecting the complexity of balancing professional obligations with personal life in a way that promotes individual growth and well-being.
 
-@WLB conceptualize WLB as “The individual’s perception that work and non-work activities are compatible and promote growth in accordance with an individual’s current life priorities,” highlighting the subjective nature of achieving balance based on personal priorities and life stages. Similarly, the Canadian Department of Labor's perspective, as cited in @WFP, defines WLB more expansively as “a self-defined, self-determined state of well-being that a person can reach, or can set as a goal, that allows them to manage effectively multiple responsibilities at work, at home, and in their community; it supports physical, emotional, family, and community health, and does so without grief, stress or negative impact.” These definitions underscore the personalized and dynamic nature of work-life balance, suggesting that achieving it involves managing various dimensions of life in a harmonious manner that minimizes stress and maximizes well-being.
+@WLB conceptualize WLB as "The individual’s perception that work and non-work activities are compatible and promote growth in accordance with an individual’s current life priorities," highlighting the subjective nature of achieving balance based on personal priorities and life stages. Similarly, the Canadian Department of Labor's perspective, as cited in @WFP, defines WLB more expansively as "a self-defined, self-determined state of well-being that a person can reach, or can set as a goal, that allows them to manage effectively multiple responsibilities at work, at home, and in their community; it supports physical, emotional, family, and community health, and does so without grief, stress or negative impact." These definitions underscore the personalized and dynamic nature of work-life balance, suggesting that achieving it involves managing various dimensions of life in a harmonious manner that minimizes stress and maximizes well-being.
 Drawing from the rich data provided by the US General Social Survey (GSS) conducted by @data, this paper seeks to explore the intricate relationships between work hours and various factors, including financial satisfaction, personal well-being, social class perceptions, and demographic characteristics. The GSS dataset, renowned for its comprehensive coverage of the American population's attitudes and behaviors, offers a unique lens through which we can assess these dynamics over time.
 
 The paper is structured as follows: The Data section details the sources, limitations, and preprocessing of the GSS dataset. The Results section presents our findings, showcasing the relationships between work hours and various factors across different demographic groups.
-# Data {#sec-data}
+
+# Data
 Data used in this paper are retrieved from the US General Social Survey (GSS) from NORC at @data. We retrieved demographic data as well as survey questions related to work hours from 1972 to 2022.
 
-##Source Data {#sec-sourcedata}
+## Source Data
 Source Data For demographic factors and questions related to work hours, we retrieved the following data as described in @tbl-data
 ```{r}
 #| label: tbl-data
@@ -47,24 +48,22 @@ Source Data For demographic factors and questions related to work hours, we retr
 
 
 data <- data.frame(
-  Variable = c("age", "cohort", "sexbirth1", "marital", "degree", "income16", "satfin", "finalter", "finrela", "class", "class1"),
-  Description = c("Respondent's age", "Birth cohort of respondent", "sex recorded at birth", "Respondent's marital status", "Respondent's degree", "family income recorded in 2016", "Respondent's satisfaction with their current financial situation", "Changes in respondent's financial situation", "Comparing respondent’s family income with American families in general", "self identified social class the respondent belong in", "self identified social class the respondent belong in (more granular than social_class)"),
-  Example = c("56", "1965", "Female", "Divorced", "Bachelors", "$50,000 TO $59,999", "Pretty Well Satisfied", "Stayed the same", "Above Average", "Middle Class", "Upper Middle Class")
+  Variable = c("Year","id","age","degree","marital","babies","preteen","teens","adults","wrkstat","earnrs","income","relig","happy","health","satjob","satfin","class","hrs","sphrs"),
+  Description = c("Calendar year of the survey", "Unique identifier for each respondent", "Respondent's age", "Highest degree received by the respondent", "Respondent's marital status", "Number of babies in the household", "Number of preteen children in the household", "Number of teenage children in the household", "Number of adult members in the household", "Work status of the respondent", "Number of earners in the household", "Total family income recorded in the year", "Religious affiliation of the respondent", "Respondent's overall happiness", "Respondent's self-reported health status", "Respondent's job satisfaction", "Respondent's financial satisfaction", "Self-identified social class of the respondent", "Total hours worked by the respondent in a week", "Total hours worked by the respondent's spouse in a week"),
+  Example = c("2022", "12345", "56", "Bachelor's", "Divorced", "2", "1", "0", "2", "Full-time", "1", "$50,000 to $59,999", "3", "3", "3", "3", "4", "Middle class", "40", "35")
 )
-
-# Create the table using kable and kableExtra for HTML output
 kable(data)
 ```
-##Data Limitations {#sec-datalimitations}
-###Non-response Error{#sec-nre}
+## Data Limitations
+### Non-response Error
 The transition to web surveys in 2021 resulted in a lower response rate (17%) compared to the traditionally higher rates achieved through in-person surveys. Although this rate is high for web surveys, it marks a significant departure from past GSS methodologies. Differential participation rates across years could influence the representativeness of the survey data. While efforts to adjust for these differences using post-stratification weighting are made, the potential for non-response bias impacting trend comparisons remains a concern.
 
-###Remote Work {#sec-rw}
+### Remote Work
 For remote work during the COVID-19 period, the shift to remote work can significantly affect the true total working hours reported. Without the clear boundaries that separate work from personal time in an office setting, remote employees might work longer hours, either by starting earlier, finishing later, or working intermittently across the day.
 
 The transition to remote work has also introduced challenges in accurately reporting work hours. Employees working from home may have their work hours categorized as "NA" (not available) due to inconsistencies in self-reporting.
 
-##Data Cleaning{#sec-dc}
+## Data Cleaning
 Data was cleaned and analyzed using the open source statistically programming language @R, using functionalities from @tidyverse, and @haven.
 
 The dataset was filtered to select key variables of interest, such as working hours, respondent demographics, and survey responses. This step involved selecting specific columns from the raw GSS data, including year, identification variables, work hours, age, educational attainment, marital status, number of children in different age groups, work status, income, and measures of subjective well-being among others.
@@ -72,7 +71,7 @@ The dataset was filtered to select key variables of interest, such as working ho
 Missing values for work hours (hrs1, hrs2) and spouse's work hours (sphrs1, sphrs2) were set to 0, indicating no reported hours. Similar treatment was applied to variables indicating the number of children in different age groups and the number of earners in the household. New variables were created to represent total work hours (hrs) and spouse's total work hours (sphrs) by summing the respective variables. Records with no reported work hours or earners were filtered out to focus on employed respondents. 
 
 
-#Results
+# Results
 @fig-year shows the fluctuating average working hours per week from 1980 to beyond 2020, with notable peaks suggesting periods of increased work hours and a recent sharp decline, possibly indicating economic or policy changes.
 
 ```{r}
