@@ -29,6 +29,7 @@ cleaned_data<-read_csv(file=here("data/analysis_data/analysis_data.csv"))
 
 
 # Introduction
+
 Work hours, as a central facet of our daily routines, have profound implications for our well-being and life satisfaction. The quest for an optimal work-life balance (WLB) has become more pressing in recent years, amid reports of increasing work hours and their consequent impact on individuals' quality of life worldwide. The concept of WLB, however, is multifaceted and varies in its operational definition across different studies, reflecting the complexity of balancing professional obligations with personal life in a way that promotes individual growth and well-being.
 
 @WLB conceptualize WLB as "The individual’s perception that work and non-work activities are compatible and promote growth in accordance with an individual’s current life priorities," highlighting the subjective nature of achieving balance based on personal priorities and life stages. Similarly, the Canadian Department of Labor's perspective, as cited in @WFP, defines WLB more expansively as "a self-defined, self-determined state of well-being that a person can reach, or can set as a goal, that allows them to manage effectively multiple responsibilities at work, at home, and in their community; it supports physical, emotional, family, and community health, and does so without grief, stress or negative impact." These definitions underscore the personalized and dynamic nature of work-life balance, suggesting that achieving it involves managing various dimensions of life in a harmonious manner that minimizes stress and maximizes well-being.
@@ -40,7 +41,7 @@ The paper is structured as follows: The Data section details the sources, limita
 Data used in this paper are retrieved from the US General Social Survey (GSS) from NORC at @data. We retrieved demographic data as well as survey questions related to work hours from 1972 to 2022.
 
 ## Source Data
-Source Data For demographic factors and questions related to work hours, we retrieved the following data as described in @tbl-data
+Source Data For demographic factors and questions related to work hours, we retrieved the following data as described in @tbl-data。
 ```{r}
 #| label: tbl-data
 #| tbl-cap: "Data Retrived"
@@ -72,6 +73,8 @@ Missing values for work hours (hrs1, hrs2) and spouse's work hours (sphrs1, sphr
 
 
 # Results
+
+## Average working hours
 @fig-year shows the fluctuating average working hours per week from 1980 to beyond 2020, with notable peaks suggesting periods of increased work hours and a recent sharp decline, possibly indicating economic or policy changes.
 
 ```{r}
@@ -160,7 +163,7 @@ ggplot(hrs_by_num_of_minors,aes(x=minors,y=mean))+
   geom_line() +
   geom_point() +
   theme_minimal() + 
-  labs(x = "age",
+  labs(x = "Number of Minors",
        y = "Average Working Hours per Week")
 
 ```
@@ -186,9 +189,11 @@ ggplot(hrs_by_ratio,aes(x=ratio,y=mean))+
   geom_line() +
   geom_point() +
   theme_minimal() + 
-  labs(x = "Ratio of family members and earners",
+  labs(x = "Ratio of Family Members and Earners",
        y = "Average Working Hours per Week")
 ```
+
+## Work Satisfaction
 
 @fig-satjob illustrates a clear downward trend in average working hours as work satisfaction increases, suggesting a potential relationship between these two variables. This indicates that employees with higher work satisfaction tend to have fewer average working hours, which could be interpreted as a sign that better work-life balance leads to higher job satisfaction, or that happier employees are more efficient and thus need less time to complete their work. However, it’s crucial to note that correlation does not equal causation, and further analysis would be required to understand the underlying reasons for this relationship.
 
@@ -236,6 +241,8 @@ ggplot(satjob_by_hrs,aes(x=hrs,y=mean))+
   expand_limits(y=0)
 ```
 
+## Financial satisfaction
+
 In @fig-satfin, it exhibits a downward slope, indicating that as financial satisfaction increases, the average working hours decrease. This could suggest that individuals who are more financially satisfied may be working fewer hours, perhaps due to higher wages or the ability to achieve a comfortable living without needing to work longer hours. Conversely, those with lower financial satisfaction may be working more hours, potentially due to lower wages requiring more work to meet financial needs.
 
 ```{r}
@@ -262,15 +269,33 @@ ggplot(hrs_by_satfin,aes(x=satfin ,y=mean))+
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Work Hours and Socio-Economic Disparities
+
+The data indicate a nuanced relationship between work hours and social class, with @fig-class illustrating that individuals from lower socio-economic backgrounds tend to work longer hours compared to their upper-class counterparts. This trend suggests a reinforcement of existing socio-economic disparities, where those in lower social classes may engage in longer work hours out of necessity rather than choice, potentially due to lower wage rates or the type of employment available to them. Conversely, the upper class, possibly benefiting from higher wages or salaries, has the luxury of working fewer hours, highlighting a socio-economic advantage that allows for a better work-life balance. Overall, this situation will continue to widen economic inequality and will continue to create significant differences in the quality of life. People from lower socio-economic backgrounds will continue to lose leisure time and opportunities for personal development, creating a vicious circle.
+
+## Lifecycle Patterns and the Impact of Age on Work Hours
+
+Our findings, shown in @fig-age, present a life-cycle pattern of hours worked, reflecting a peak in middle age followed by a decline after age 60 (possibly due to retirement). Specifically, the golden years of adulthood are largely devoted to labor, which often tends to come at the expense of personal development and leisure. While work experience increases with age, the decline in hours worked after age 60 suggests a social acceptance of retirement or consideration of the physical condition of older people and allows them to shift their priorities to leisure, health and family. However, this life-cycle pattern also reflects the challenges faced by different age groups, in particular the need to balance the pressures of work, family responsibilities and personal well-being for middle-aged people, many of whom need to devote a significant amount of time to work while the cost of unemployment can be difficult for them to bear, and for older people, the need for the labor market to balance the risks to their health and the industry benefits of their wealth of work experience. The advantages of older workers, especially those with experience in education and research, are irreplaceable by younger workers.
 
 
+## Better Financial Satisfaction with Work Hours
 
-## Second discussion point
+As shown in @fig-satfin, the inverse relationship between financial satisfaction and hours worked provides insights into the dynamics of work and finances. It suggests that those who are more financially satisfied tend to work fewer hours, possibly because they either earn enough money to satisfy their needs in fewer hours of work or because they value time over money and choose to work less and possibly live more. On the other hand, those with lower financial satisfaction may find themselves working longer hours either to break even or to pursue financial goals that are difficult to achieve due to the wage gap or cost of living. This finding challenges the conventional wisdom that more work equals more financial security. While it is true that different types of workers produce different amounts of value per unit of time, blindly constraining those who are highly specialized to do more work based on the notion of "the more you can do, the more you have to do" does not lead to greater financial satisfaction even if they are paid more. With the current development of human productivity, the labor market can gradually provide a more professional threshold that is not so high work, to let as many people as possible participate in the work which can reduce the intensity of the work of some highly professional talent, also as far as possible to prevent the culture of involution so that society can shift to a model of work that can improve economic satisfaction and do not require too many hours of work. Everyone has a job, everyone has spending power, but not too much work time for one person, creating a virtuous socio-economic cycle. While many companies are already doing this, there is still a long way to go before the idealized labor market is completely accomplished.
 
-## Third discussion point
+# Weaknesses and Next Steps
 
-## Weaknesses and next steps
+This study’s reliance on self-reported data and the transition to web surveys introduces potential biases and comparability issues across the dataset. Moreover, it doesn't fully explore the qualitative dimensions of work, such as job satisfaction and workplace culture, or delve into regional and sector-specific variations that might affect work-life balance.
+
+Future Directions:
+
+1. Longitudinal Research: To better understand the long-term impact of work hours on well-being, future studies should adopt longitudinal approaches.
+2. Qualitative Insights: Incorporating qualitative research can deepen our understanding of the subjective experience of work and its balance with personal life.
+3. Cross-Cultural and Sector-Specific Studies: Exploring differences across cultures and industry sectors can offer nuanced insights into work-life balance challenges and solutions.
+4. Policy Analysis: Evaluating the effectiveness of work-related policies can guide efforts to improve work-life balance and reduce social disparities.
+
+# Conclusion
+
+In conclusion, this paper has navigated through the complex terrain of work hours and their implications on various aspects of life, shedding light on the multifaceted relationship between work-life balance (WLB) and individual well-being. By leveraging the extensive data provided by the US General Social Survey (GSS), we have been able to discern patterns and relationships that underscore the significance of achieving a harmonious balance between professional responsibilities and personal life. Our findings reveal that work hours indeed have a considerable impact on financial satisfaction, personal well-being, perceptions of social class, and demographic characteristics, illustrating the diverse ways in which work-life balance affects individuals across different walks of life.
 
 
 
@@ -279,7 +304,7 @@ ggplot(hrs_by_satfin,aes(x=satfin ,y=mean))+
 \appendix
 
 # Appendix {-}
-
+Link to the survey: https://forms.gle/Bm6JqTnuFAyVWwMq8
 
 
 
